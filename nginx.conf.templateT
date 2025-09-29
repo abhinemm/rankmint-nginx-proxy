@@ -1,0 +1,42 @@
+events {}
+
+http {
+    # This is a standard setting required for Docker's internal networking to work reliably.
+    resolver 127.0.0.11;
+
+    server {
+        listen 8080;
+        server_name _;
+        client_max_body_size 100M;
+
+        # --- Flask App (rankmint) ---
+        location / {
+            # Force Nginx to look up the 'rankmint' service on the private network.
+            set $rankmint_upstream "http://rankmint:8080";
+            proxy_pass $rankmint_upstream;
+
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # --- WordPress Blog ---
+        location /blog/ {
+            # Force Nginx to look up the 'wordpress' service on the private network.
+            set $wordpress_upstream "http://wordpress";
+            proxy_pass $wordpress_upstream;
+
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_redirect off;
+        }
+
+        # --- Rule to fix the /blog 404 error ---
+        location = /blog {
+            return 301 $scheme://$host/blog/;
+        }
+    }
+}
