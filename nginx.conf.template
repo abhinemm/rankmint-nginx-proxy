@@ -12,7 +12,7 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # --- WordPress Blog ---
+    # ---  WordPress Blog ---
     location /blog/ {
         proxy_pass http://${WORDPRESS_HOST}/;
         proxy_set_header Host $host;
