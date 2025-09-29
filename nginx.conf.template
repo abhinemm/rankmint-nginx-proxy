@@ -8,7 +8,7 @@ http {
 
         # --- Flask App (rankmint) ---
         location / {
-            # Use the direct private IP address from the variable we created.
+            # This placeholder will be replaced by the correct IP address on startup.
             proxy_pass http://${RANKMINT_HOST}:8080;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
@@ -18,7 +18,7 @@ http {
 
         # --- WordPress Blog ---
         location /blog/ {
-            # Use the direct private IP address from the variable we created.
+            # This placeholder will be replaced by the correct IP address on startup.
             proxy_pass http://${WORDPRESS_HOST}/;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
