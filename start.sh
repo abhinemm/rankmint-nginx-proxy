@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh 
 echo "=== DEBUG: Environment Variables ==="
 echo "RANKMINT_HOST: $RANKMINT_HOST"
 echo "WORDPRESS_HOST: $WORDPRESS_HOST"
@@ -11,3 +11,4 @@ cat /etc/nginx/nginx.conf
 echo "===================================="
 
 nginx -g 'daemon off;'
+# Updated at 3:30 AM
