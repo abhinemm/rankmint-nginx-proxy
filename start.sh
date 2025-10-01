@@ -1,3 +1,4 @@
+env
 #!/bin/sh 
 echo "=== DEBUG: Environment Variables ==="
 echo "RANKMINT_HOST: $RANKMINT_HOST"
