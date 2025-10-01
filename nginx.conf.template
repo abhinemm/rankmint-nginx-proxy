@@ -13,7 +13,7 @@ http {
 
         # Main Flask app
         location / {
-            proxy_pass http://${RANKMINT_HOST}:8080;
+            proxy_pass https://${RANKMINT_HOST};
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
