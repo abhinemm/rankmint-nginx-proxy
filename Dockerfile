@@ -4,5 +4,5 @@ COPY nginx.conf.template /etc/nginx/nginx.conf.template
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 EXPOSE 8080
-CMD ["/start.sh"]
+ENTRYPOINT ["/start.sh"]
 # Cache bust v2
