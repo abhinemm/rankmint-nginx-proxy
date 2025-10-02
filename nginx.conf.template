@@ -11,25 +11,29 @@ http {
         server_name _;
         client_max_body_size 100M;
 
-        # Main Flask app - using public Railway URL
+        # Main Flask app
         location / {
-            proxy_pass https://rankmint-production.up.railway.app;
+            proxy_pass http://${RANKMINT_HOST}:${PORT};
+            proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto https;
-            proxy_ssl_server_name on;
-            proxy_ssl_protocols TLSv1.2 TLSv1.3;
+            proxy_set_header X-Forwarded-Proto $scheme;
         }
 
-        # WordPress blog - using private network (this works)
-        location /blog {
+        # WordPress blog - with proper path handling
+        location ~ ^/blog(/.*)?$ {
+            # Rewrite /blog/something to /something for WordPress
+            rewrite ^/blog(.*)$ $1 break;
+            
             proxy_pass http://wordpress.railway.internal:80;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header X-Forwarded-Host $host;
-            proxy_redirect off;
+            
+            # Critical: rewrite redirects from WordPress to include /blog
+            proxy_redirect / /blog/;
+            proxy_redirect http:// https://;
         }
     }
 }
