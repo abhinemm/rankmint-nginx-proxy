@@ -11,7 +11,7 @@ http {
         server_name _;
         client_max_body_size 100M;
 
-        # Main Flask app - USES PORT 8080
+        # Main Flask app (rankmint)
         location / {
             proxy_pass http://rankmint.railway.internal:8080;
             proxy_set_header Host $host;
@@ -20,7 +20,7 @@ http {
             proxy_set_header X-Forwarded-Proto $scheme;
         }
 
-        # WordPress blog - keep /blog in the path
+        # WordPress blog
         location /blog {
             proxy_pass http://wordpress.railway.internal:80;
             proxy_set_header Host $host;
