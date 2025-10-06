@@ -6,13 +6,18 @@ http {
     access_log /dev/stdout;
     error_log /dev/stderr info;
     
+    # Force IPv4 DNS resolution
+    resolver 8.8.8.8 ipv6=off;
+    
     server {
         listen 8080;
         server_name _;
         client_max_body_size 100M;
         
         location / {
-            proxy_pass http://rankmint.railway.internal:8080;
+            # Use variable to force dynamic DNS lookup
+            set $backend "rankmint.railway.internal:8080";
+            proxy_pass http://$backend;
             
             proxy_http_version 1.1;
             proxy_set_header Connection "";
@@ -27,7 +32,8 @@ http {
         }
         
         location /blog {
-            proxy_pass http://wordpress.railway.internal:80;
+            set $wp_backend "wordpress.railway.internal:80";
+            proxy_pass http://$wp_backend;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
