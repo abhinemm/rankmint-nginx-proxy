@@ -26,9 +26,9 @@ http {
             proxy_read_timeout 60s;
         }
         
-        location /blog {
-            # Remove /blog prefix when passing to WordPress
-            rewrite ^/blog(/.*)$ $1 break;
+        location /en {
+            # Remove /en prefix when passing to WordPress
+            rewrite ^/en(/.*)$ $1 break;
             
             proxy_pass http://wordpress.railway.internal:80;
             proxy_set_header Host $host;
@@ -37,9 +37,9 @@ http {
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $host;
             
-            # Rewrite WordPress redirects to include /blog
-            proxy_redirect ~^http://[^/]+/(.*) https://$host/blog/$1;
-            proxy_redirect ~^https://[^/]+/(.*) https://$host/blog/$1;
+            # Rewrite WordPress redirects to include /en
+            proxy_redirect ~^http://[^/]+/(.*) https://$host/en/$1;
+            proxy_redirect ~^https://[^/]+/(.*) https://$host/en/$1;
         }
     }
 }
