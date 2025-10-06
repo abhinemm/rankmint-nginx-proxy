@@ -27,13 +27,19 @@ http {
         }
         
         location /blog {
+            # Remove /blog prefix when passing to WordPress
+            rewrite ^/blog(/.*)$ $1 break;
+            
             proxy_pass http://wordpress.railway.internal:80;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $host;
-            proxy_redirect off;
+            
+            # Rewrite WordPress redirects to include /blog
+            proxy_redirect ~^http://[^/]+/(.*) https://$host/blog/$1;
+            proxy_redirect ~^https://[^/]+/(.*) https://$host/blog/$1;
         }
     }
 }
