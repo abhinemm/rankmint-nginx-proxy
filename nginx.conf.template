@@ -12,11 +12,7 @@ http {
         client_max_body_size 100M;
         
         location / {
-            # Explicitly use IPv4 address by resolving it ourselves
             proxy_pass http://rankmint.railway.internal:8080;
-            
-            # Force IPv4 only for this upstream
-            proxy_bind 0.0.0.0;
             
             proxy_http_version 1.1;
             proxy_set_header Connection "";
