@@ -11,7 +11,7 @@ http {
         server_name _;
         client_max_body_size 100M;
         
-        # Flask
+        # Flask at root
         location / {
             proxy_pass http://rankmint.railway.internal:8080;
             proxy_http_version 1.1;
@@ -27,14 +27,20 @@ http {
         
         # WordPress under /en/
         location /en/ {
-            rewrite ^/en(/.*)$ $1 break;
+            # Strip /en before passing to WordPress
+            rewrite ^/en(/.*)?$ $1 break;
+            
             proxy_pass http://wordpress.railway.internal:80;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $host;
-            proxy_redirect off;
+            
+            # Add /en back to any redirects from WordPress
+            proxy_redirect / /en/;
+            proxy_redirect http://$host/ http://$host/en/;
+            proxy_redirect https://$host/ https://$host/en/;
         }
     }
 }
