@@ -27,9 +27,7 @@ http {
         }
         
         location /en {
-            # Remove /en prefix when passing to WordPress
-            rewrite ^/en(/.*)$ $1 break;
-            
+            # Don't rewrite - pass the full path including /en
             proxy_pass http://wordpress.railway.internal:80;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
@@ -37,9 +35,8 @@ http {
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $host;
             
-            # Rewrite WordPress redirects to include /en
-            proxy_redirect ~^http://[^/]+/(.*) https://$host/en/$1;
-            proxy_redirect ~^https://[^/]+/(.*) https://$host/en/$1;
+            # Don't manipulate redirects - WordPress already knows about /en
+            proxy_redirect off;
         }
     }
 }
