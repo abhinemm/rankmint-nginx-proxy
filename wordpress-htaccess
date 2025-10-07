@@ -1,8 +1,9 @@
 # WordPress .htaccess for /en subdirectory setup
 RewriteEngine On
+RewriteBase /en/
 
 # Handle WordPress admin and login redirects
-RewriteCond %{REQUEST_URI} ^/wp-admin/?(.*)$ [NC]
+RewriteCond %{REQUEST_URI} ^/wp-admin/(.*)$ [NC]
 RewriteRule ^(.*)$ /en/wp-admin/%1 [R=301,L]
 
 RewriteCond %{REQUEST_URI} ^/wp-login\.php(.*)$ [NC]
@@ -10,9 +11,9 @@ RewriteRule ^(.*)$ /en/wp-login.php%1 [R=301,L]
 
 # Handle other WordPress core files
 RewriteCond %{REQUEST_URI} ^/wp-(.*)$ [NC]
-RewriteRule ^wp-(.*)$ /en/wp-$1 [R=301,L]
+RewriteRule ^(.*)$ /en/wp-%1 [R=301,L]
 
 # Standard WordPress permalink structure
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
+RewriteRule . /en/index.php [L]
