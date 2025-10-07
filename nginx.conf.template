@@ -27,25 +27,14 @@ http {
         
         # WordPress under /en/
         location /en/ {
-            proxy_pass http://wordpress.railway.internal:80/;
+            rewrite ^/en(/.*)$ $1 break;
+            proxy_pass http://wordpress.railway.internal:80;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $host;
-            
-            # Handle WordPress redirects properly
-            proxy_redirect ~^https?://[^/]+/(.*) /en/$1;
-        }
-        
-        # Handle WordPress assets and admin files
-        location /en/wp- {
-            proxy_pass http://wordpress.railway.internal:80/wp-;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header X-Forwarded-Host $host;
+            proxy_redirect off;
         }
     }
 }
