@@ -24,23 +24,16 @@ http {
             proxy_send_timeout 60s;
             proxy_read_timeout 60s;
         }
-        
         # WordPress under /en/
-        location /en/ {
-            # Strip /en before passing to WordPress
-            rewrite ^/en(/.*)?$ $1 break;
-            
+            location /en/ {
             proxy_pass http://wordpress.railway.internal:80;
+    
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $host;
-            
-            # Add /en back to any redirects from WordPress
-            proxy_redirect / /en/;
-            proxy_redirect http://$host/ http://$host/en/;
-            proxy_redirect https://$host/ https://$host/en/;
+            proxy_redirect off;
         }
     }
 }
