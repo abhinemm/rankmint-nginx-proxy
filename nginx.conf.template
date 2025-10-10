@@ -27,7 +27,7 @@ http {
 
         # WordPress under /en/
         location /en/ {
-            rewrite ^/en/(.*) /$1 break;
+            rewrite ^/en/(/.*) /$1 break;
             proxy_pass http://wordpress.railway.internal:80;
             
             proxy_set_header Host $host;
